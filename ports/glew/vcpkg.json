@@ -6,7 +6,6 @@
   "homepage": "https://github.com/nigels-com/glew",
   "supports": "!android",
   "dependencies": [
-    "opengl",
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -1,3 +1,5 @@
+list(APPEND CMAKE_PREFIX_PATH "${CURRENT_INSTALLED_DIR}/share/brotli")
+
 if("subpixel-rendering" IN_LIST FEATURES)
     set(SUBPIXEL_RENDERING_PATCH "subpixel-rendering.patch")
 endif()
@@ -16,6 +18,7 @@ vcpkg_from_gitlab(
         brotli-static.patch
         bzip2.patch
         fix-exports.patch
+	fix-brotli-cmake.patch
         ${SUBPIXEL_RENDERING_PATCH}
 )
 

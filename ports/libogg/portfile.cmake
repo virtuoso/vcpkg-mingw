@@ -32,3 +32,12 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+
+if (NOT ${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
+    file(INSTALL
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/ogg"
+        TYPE FILE
+        FILES "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    )
+endif ()
+

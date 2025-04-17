@@ -15,6 +15,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_POLICY_VERSION_MINIMUM=3.5 # https://github.com/xiph/vorbis/issues/113
+        -DCMAKE_C_FLAGS="-I${CURRENT_INSTALLED_DIR}/include"
+	-DCMAKE_REQUIRED_INCLUDES="-I${CURRENT_INSTALLED_DIR}/include"
     MAYBE_UNUSED_VARIABLES
         CMAKE_POLICY_VERSION_MINIMUM
 )
@@ -24,7 +26,17 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME Vorbis CONFIG_PATH "lib/cmake/Vorbis")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+#vcpkg_cmake_configure(
+#    SOURCE_PATH ${SOURCE_PATH}
+#    PREFER_NINJA
+#    OPTIONS
+#	-DCMAKE_C_FLAGS="-I${CURRENT_INSTALLED_DIR}/include"
+#	-DCMAKE_REQUIRED_INCLUDES="-I${CURRENT_INSTALLED_DIR}/include"
+#)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+list(APPEND CMAKE_INCLUDE_PATH "${CURRENT_INSTALLED_DIR}/include")
+

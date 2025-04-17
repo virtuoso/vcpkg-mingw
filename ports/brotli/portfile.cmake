@@ -29,7 +29,21 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
 	set(TOOL_SUFFIX ".js" )
 endif()
 
-vcpkg_copy_tools(TOOL_NAMES "brotli${TOOL_SUFFIX}" SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/brotli")
+#vcpkg_copy_tools(TOOL_NAMES "brotli${TOOL_SUFFIX}" SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/brotli")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+# Manually install a fake brotlidec-config.cmake for CONFIG mode lookup
+file(INSTALL
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/brotli"
+    TYPE FILE
+    FILES "${CMAKE_CURRENT_LIST_DIR}/brotlidec-config.cmake"
+)
+
+file(INSTALL
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/brotli"
+    TYPE FILE
+    FILES "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+)
+

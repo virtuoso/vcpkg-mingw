@@ -1,0 +1,25 @@
+--- a/CMakeLists.txt	2025-04-09 19:08:39.111862464 +0300
++++ b/CMakeLists.txt	2025-04-09 19:18:37.714895821 +0300
+@@ -292,12 +292,20 @@
+ 
+ if (NOT FT_DISABLE_BROTLI)
+   if (FT_REQUIRE_BROTLI)
+-    find_package(BrotliDec REQUIRED)
++    find_package(BrotliDec CONFIG REQUIRED)
+   else ()
+-    find_package(BrotliDec)
++    find_package(BrotliDec CONFIG)
+   endif ()
+ endif ()
+ 
++if(NOT TARGET BrotliDec)
++    add_library(BrotliDec STATIC IMPORTED GLOBAL)
++    set_target_properties(BrotliDec PROPERTIES
++        IMPORTED_LOCATION "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libbrotlidec.a;${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/libbrotlicommon.a"
++        INTERFACE_INCLUDE_DIRECTORIES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
++    )
++endif()
++
+ # Create the configuration file
+ if (UNIX AND NOT WIN32)
+   check_include_file("unistd.h" HAVE_UNISTD_H)

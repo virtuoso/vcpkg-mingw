@@ -26,6 +26,28 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
+if((NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW) AND NOT ${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
+    file(CREATE_LINK
+        "${CURRENT_PACKAGES_DIR}/lib/libzlib.a"
+        "${CURRENT_PACKAGES_DIR}/lib/libz.a"
+        SYMBOLIC
+    )
+    file(CREATE_LINK
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libzlibd.a"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libz.a"
+        SYMBOLIC
+    )
+else ()
+    file(COPY_FILE
+         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libzlib.a"
+         "${CURRENT_PACKAGES_DIR}/lib/libz.a"
+    )
+    file(COPY_FILE
+         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libzlibd.a"
+         "${CURRENT_PACKAGES_DIR}/debug/lib/libz.a"
+    )
+endif()
+
 # Install the pkgconfig file
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     if(VCPKG_TARGET_IS_WINDOWS)
