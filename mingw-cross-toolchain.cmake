@@ -25,7 +25,18 @@ else()
     set(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
     set(CMAKE_RC_COMPILER x86_64-w64-mingw32-windres)
 
-    set(CMAKE_FIND_ROOT_PATH /usr/x86_64-w64-mingw32 /usr/lib/gcc/x86_64-w64-mingw32)
+    # vcpkg.cmake chainloads this file and only afterwards prepends the
+    # installed tree to CMAKE_FIND_ROOT_PATH. CMake includes the toolchain
+    # several times and on every re-inclusion vcpkg.cmake bails out early
+    # (VCPKG_TOOLCHAIN is set by then), so overwriting the variable here
+    # drops those entries; with the ONLY modes below that leaves every
+    # find_path()/find_library() re-rooted under the sysroot alone and
+    # nothing in installed/${VCPKG_TARGET_TRIPLET} is ever found.
+    foreach(dir /usr/x86_64-w64-mingw32 /usr/lib/gcc/x86_64-w64-mingw32)
+        if(NOT "${dir}" IN_LIST CMAKE_FIND_ROOT_PATH)
+            list(APPEND CMAKE_FIND_ROOT_PATH "${dir}")
+        endif()
+    endforeach()
 
     set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
     set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
